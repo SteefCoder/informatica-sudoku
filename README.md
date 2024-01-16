@@ -1,15 +1,22 @@
 # Informatica project
 Dit is het informatica project van Silvan van de Sande, Nathan Ooms en Stefan van der Duijs.
-We maken een sudoku solver in C, die we koppelen aan een website met een backend in python.
-Hopelijk kunnen we ook sudoku's genereren.
+We maken een sudoku solver in C, die we koppelen aan een website met een backend in python en frontend in javascript.
+
+
+## Belangrijkste stappen
+1) Het leren van C
+2) Het leren van version control met GitHub
+3) Het maken van een sudoku-solver
+4) Het maken van een (simple) website
+5) Het koppelen van de website aan de solver (met een API?)
+
+
+## Taakverdeling
+Wie is de scrum master? Wie is de product owner? Wie doet wat?
+
 
 ## User stories
 
-### Input sudoku
-- Als programmeur wil ik een sudoku als invoer kunnen geven aan het programma (in de vorm van een string van lengte 81).
-- Must have.
+Het Trello bord kan je vinden via deze link:
 
-
-### Display sudoku
-- Als programmeur wil een sudoku mooi kunnen zien in de terminal.
-- Must have.
+https://trello.com/b/P5Pp0BhS/informatica-po6-2024-sudoku
