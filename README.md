@@ -10,9 +10,18 @@ We maken een sudoku solver in C, die we koppelen aan een website met een backend
 4) Het maken van een (simple) website
 5) Het koppelen van de website aan de solver (met een API?)
 
+## Minimum viable product
+We willen op z'n minst een solver in C die een makkelijke sudoku binnen 5 seconden kan oplossen.
+Makkelijk betekent dat minimaal 36 cijfers al gegeven zijn. (=MVP)
+
+Daarna zou het mooi zijn als we alle sudoku's kunnen oplossen (minimaal 17 cijfers) binnen een kortere tijd (1 seconde). (=should have)
+
+Als laatste willen we een mooie website (localhost) om sudoku's op in te kunnen voeren. (=could have)
+
 
 ## Taakverdeling
-Wie is de scrum master? Wie is de product owner? Wie doet wat?
+- Scrum master: Stefan
+- Product owner: Silvan
 
 
 ## User stories
