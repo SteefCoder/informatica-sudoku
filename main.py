@@ -5,7 +5,7 @@
 # python <filename>.py
 
 def main():
-    print("Hello world!")
+    print("BOB")
 
 
 if __name__ == '__main__':
