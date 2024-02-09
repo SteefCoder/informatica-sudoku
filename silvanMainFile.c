@@ -3,6 +3,9 @@
 #include<string.h>
 #include<time.h>
 
+#include "mathematicalSolver.c"
+#include "printHandler.c"
+
 
 int main() {
 
