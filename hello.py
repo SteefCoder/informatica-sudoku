@@ -20,3 +20,7 @@ def solve():
     int_grid = [int(x) for x in grid]
     solvable, solution = solve_sudoku(int_grid)
     return {"grid": solution, "solvable": solvable}
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
