@@ -8,7 +8,7 @@ app.secret_key = rb'43290&O*#@&$#@*Ofk#$#@#*^TIF$@#&B*'
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("sudoku.html")
 
 
 @app.route('/solve-sudoku', methods=['GET'])
