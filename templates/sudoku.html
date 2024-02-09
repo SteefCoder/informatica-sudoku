@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <script src="{{ url_for('static', filename='base.js') }}"></script>
+    <title>Sudoku</title>
+</head>
+
+<body>
+
+<button onclick="solveGrid()">Solve</button>
+<button onclick="emptyGrid()">Empty</button>
+<br/>
+<input id="sudoku-code" type="text" size="81">
+<button onclick="setGridFromCode()">Set grid</button>
+<table class="center">
+    {% for row in range(9) %}
+        {% if row > 0 and row % 3 == 0 %}<tr></tr><tr></tr>{% endif %}
+        <tr>
+        {% for col in range(9) %}
+            <td><input id="{{ 9 * row + col }}" class="sudoku-cell" type="text" onkeypress="handleInput(event, {{ 9 * row + col }})"></td>
+
+            {% if col < 8 and col % 3 == 2 %}<td style="border: none"></td>{% endif %}
+        {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
