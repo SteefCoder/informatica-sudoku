@@ -1,7 +1,10 @@
 # Informatica project sprint 1
 Dit is het informatica project van Silvan van de Sande, Nathan Ooms en Stefan van der Duijs.
 We maken een sudoku solver in C, die we koppelen aan een website met een backend in python en frontend in html/ css/ javascript.
-
+Voor deze sprint is er alleen een command line solver.
+Deze kan je builden met 
+```cl silvanMainFile.c```
+in Visual Studio.
 
 ## Belangrijkste stappen van de eerste sprint
 1) Het leren van C
