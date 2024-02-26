@@ -1,4 +1,4 @@
-# Informatica project
+# Informatica project sprint 1
 Dit is het informatica project van Silvan van de Sande, Nathan Ooms en Stefan van der Duijs.
 We maken een sudoku solver in C, die we koppelen aan een website met een backend in python en frontend in html/ css/ javascript.
 
@@ -17,6 +17,10 @@ Daarna zou het mooi zijn als we alle sudoku's kunnen oplossen (minimaal 17 cijfe
 Als laatste willen we een mooie website (localhost) om sudoku's op in te kunnen voeren. (=could have)
 
 ## Taakverdeling
+Iedereen doet de sudoku solver (vooral Silvan).
+Stefan zet de git op en de trello.
+Nathan leert html en css om de frontend te doen.
+
 - Scrum master: Stefan
 - Product owner: Silvan
 
