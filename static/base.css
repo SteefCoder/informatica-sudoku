@@ -55,3 +55,33 @@ table.center {
   color: white;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+.top {
+  background-color: #21ecf3;
+  padding: 50px;
+  float: left;
+  width: 100%; 
+}
+
+.main {
+  background-color: #f1f1f1;
+  padding: 20px;
+  float: left;
+  width: 80%; 
+}
+
+.right {
+  background-color: #04AA6D;
+  padding: 20px;
+  float: left;
+  width: 20%; 
+}
+
+@media screen and (max-width: 800px) {
+  .left, .main, .right {
+    width: 100%; 
+  }
+}

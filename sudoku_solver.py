@@ -11,7 +11,7 @@ INT_81 = ctypes.c_int * 81
 _solverlib = ctypes.CDLL("./solverlib.so")
 
 # set up the c function
-_solve = _solverlib.solveSudoku2
+_solve = _solverlib.solveSudoku
 _solve.argtypes = [INT_81]
 
 def solve_sudoku(grid: list[int]) -> tuple[bool, list[int]]:
@@ -19,6 +19,6 @@ def solve_sudoku(grid: list[int]) -> tuple[bool, list[int]]:
     If the sudoku cannot be solved, the returned solution should be the original sudoku."""
     array = INT_81(*grid)
     _solve(array)
-    solved_grid = [int(x) for x in array.value]
+    solved_grid = [int(x) for x in array]
     solvable = all(x != 0 for x in solved_grid)
     return solvable, solved_grid
