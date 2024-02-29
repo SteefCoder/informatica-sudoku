@@ -8,7 +8,7 @@ import ctypes
 INT_81 = ctypes.c_int * 81
 
 # load the compiled c file
-_solverlib = ctypes.CDLL("./solverlib.so", winmode=0)
+_solverlib = ctypes.CDLL("./solverlib.so")
 
 # set up the c function
 _solve = _solverlib.solveSudoku2
