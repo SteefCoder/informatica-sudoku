@@ -8,14 +8,14 @@ app.secret_key = rb'43290&O*#@&$#@*Ofk#$#@#*^TIF$@#&B*'
 
 @app.route('/')
 def index():
-    return render_template("sudoku.html")
+    return render_template("homepage.html")
 
 
 @app.route('/solve-sudoku', methods=['GET'])
 def solve():
     grid = request.args["grid"]
     if not all(x.isdigit() for x in grid):
-        return {"grid": "", "solvable": False}
+        return {"grid": "", "solvable": False} 
     
     int_grid = [int(x) for x in grid]
     solvable, solution = solve_sudoku(int_grid)
