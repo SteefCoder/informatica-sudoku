@@ -247,7 +247,7 @@ const void algoritme1(int loop, int RCB, int n, int possibilities[81], int bb[81
 		if (bit_read(possibilities[location], n)) {
 			bb[location] = n + 1;
 			possibilities[location] = 0;
-			update(location, n, possibilities, findUpdatePlaces);
+			update(location, n, possibilities);
 			break;
 		}
 	}
@@ -257,7 +257,7 @@ const void algoritme1(int loop, int RCB, int n, int possibilities[81], int bb[81
 int solveSudoku(int bb[81]) {
 
 	// For backend visualization only, not part of final product
-	printBitBoard2(bb);
+	// printBitBoard2(bb);
 
 	// Setup main paramaters to keep track of the board
 	int possibilities[81] = { 0 };
@@ -317,7 +317,7 @@ int solveSudoku(int bb[81]) {
 				}
 				bb[loop] = pos + 1;
 				possibilities[loop] = 0;
-				update(loop, pos, possibilities, findUpdatePlaces);
+				update(loop, pos, possibilities);
 				doneSmth = 1;
 			}
 		}
@@ -386,6 +386,6 @@ int solveSudoku(int bb[81]) {
 		}
 	}
 	// For backend visualization only, not part of final product
-	printBitBoard2(bb);
+	// printBitBoard2(bb);
 	return bb;
 }

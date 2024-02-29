@@ -8,7 +8,7 @@ import ctypes
 INT_81 = ctypes.c_int * 81
 
 # load the compiled c file
-_solverlib = ctypes.CDLL("./solverlib.so")
+_solverlib = ctypes.CDLL(r".\solverlib.so", winmode=0)
 
 # set up the c function
 _solve = _solverlib.solveSudoku
@@ -20,6 +20,6 @@ def solve_sudoku(grid: list[int]) -> tuple[bool, list[int]]:
     If the sudoku cannot be solved, the returned solution could be anything."""
     int_pointer = INT_81(*grid)
     _solve(int_pointer)
-    sudoku = list(int_pointer.value)
+    sudoku = list(int_pointer)
     solved = all(x != 0 for x in sudoku)
     return solved, sudoku
