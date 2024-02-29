@@ -3,12 +3,15 @@
 #include <string.h>
 #include <time.h>
 
+// Used to find all the other places from a block/row/column in the char81
 const int BLOCK_ITERATIONS[9] = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
 const int ROW_ITERATIONS[9] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 const int COLUMN_ITERATIONS[9] = { 0, 9, 18, 27, 36, 45, 54, 63, 72 };
 
+// All the starting positions of the blocks in the char81
 const int BLOCK_STARTS[9] = { 0, 3, 6, 27, 30, 33, 54, 57, 60 };
 
+// Finds all the other places a cel 'sees'. So block/row/column
 const int findUpdatePlaces[81][20] = {
 	{ 1, 9, 2, 18, 3, 27, 4, 36, 10, 5, 45, 11, 6, 54, 7, 63, 19, 8, 72, 20 },
 	{ 0, 10, 2, 19, 3, 28, 9, 4, 37, 5, 46, 11, 6, 55, 18, 7, 64, 8, 73, 20 },
@@ -93,6 +96,81 @@ const int findUpdatePlaces[81][20] = {
 	{ 72, 8, 60, 73, 17, 61, 74, 26, 75, 35, 69, 76, 44, 70, 77, 53, 78, 62, 79, 71 }
 };
 
+
+// This wont be neccesary when solveSudoku gets called from the python file, wont be part of final product
+// When called by Stefan's code it will use the inputted sudoku array
+int main() {
+
+	char string[81] = ".1...8...3.472169...6....1....9.253..421.378..358.6....9....1...213874.9...5...2.";
+
+	clock_t start = clock();
+
+	// Translate string81 to int81
+	int bb[81] = { 0 };
+	for (int loop = 0; loop < 81; loop++)
+	{
+		if (string[loop] == '.' || string[loop] == '0') {
+			bb[loop] = 0;
+		}
+		else {
+			bb[loop] = string[loop] - '0';
+		}
+	}
+	solveSudoku(bb);
+
+	clock_t end = clock();
+	printf("\n\nEnd with time of %dms\n\n", end - start);
+
+	printf("\"Dont Quote me\" - Ooms. N");
+}
+
+
+// Visualize Sudoku, not part of final product
+const void printBitBoard2(int* bitboard) {
+
+	printf("\n");
+	for (int loop = 0; loop < 81; loop++)
+	{
+		if (bitboard[loop] == 0) {
+			printf("   ");
+		}
+		else {
+			printf(" \033[4m%d\033[0m ", bitboard[loop]);
+		}
+
+		if (loop % 9 == 8)
+		{
+			printf("\n");
+		}
+		if (loop == 26 || loop == 53)
+		{
+			printf("____________________________\n\n");
+		}
+		if (loop % 9 == 2 || loop % 9 == 5)
+		{
+			printf("|");
+		}
+	}
+}
+
+
+// Bitarray print function
+void printBits(size_t const size, void const* const ptr)
+{
+	unsigned char* b = (unsigned char*)ptr;
+	unsigned char byte;
+	int i, j;
+
+	for (i = size - 1; i >= 0; i--) {
+		for (j = 7; j >= 0; j--) {
+			byte = (b[i] >> j) & 1;
+			printf("%u", byte);
+		}
+	}
+	puts("");
+}
+
+
 // Bitarray maniplulation functions
 const void bit_on(int* bit_number, unsigned index)
 {
@@ -119,6 +197,7 @@ const void bit_flip(int* bit_number, unsigned index)
 	*bit_number ^= (1 << index);
 }
 
+// Returns amount of bits that are 1 in integer
 const int bit_count(int bit_number)
 {
 	int count = 0;
@@ -129,6 +208,7 @@ const int bit_count(int bit_number)
 	return count;
 }
 
+// Return True or False of certain bit
 int onlyOneBitTF(unsigned n)
 {
 	return n && (!(n & (n - 1)));
@@ -160,7 +240,7 @@ const void algoritme1(int loop, int RCB, int n, int possibilities[81], int bb[81
 	int location;
 	for (int i = 0; i < 9; i++) {
 
-		// RCB 9 is Rows RCB 1 = columns RCB
+		// RCB = 9 is Rows RCB = 1 is columns RCB = 0 is Blocks
 		// Replacement of 3 way if or switch
 		location = RCB ? RCB * loop + (9 / RCB) * i : BLOCK_STARTS[loop] + BLOCK_ITERATIONS[i];
 
@@ -174,9 +254,15 @@ const void algoritme1(int loop, int RCB, int n, int possibilities[81], int bb[81
 }
 
 
-int solveSudoku2(int bb[81]) {
+int solveSudoku(int bb[81]) {
 
+	// For backend visualization only, not part of final product
+	printBitBoard2(bb);
+
+	// Setup main paramaters to keep track of the board
 	int possibilities[81] = { 0 };
+
+	// Used to check if algorithm 3 has finished
 	int algo3done[9] = { 0 };
 
 	// Determening all the possible numbers per cell
@@ -198,7 +284,9 @@ int solveSudoku2(int bb[81]) {
 	while (doneSmth) {
 		doneSmth = 0;
 		count++;
+
 		// Algoritme 1
+		// Finds any number that only has 1 place in a ROW or COLUMN or BLOCK
 		for (int i = 0, loop = 0, n = 0; i < 81; i++, loop = i / 9, n = i % 9) {
 			if (possCounter(ROW_ITERATIONS, loop * 9, n, possibilities) == 1) {
 				algoritme1(loop, 9, n, possibilities, bb);
@@ -215,6 +303,7 @@ int solveSudoku2(int bb[81]) {
 		}
 
 		// Algorithm 2
+		// Finds any cel that only has 1 option available
 		for (int loop = 0; loop < 81; loop++) {
 			if (onlyOneBitTF(possibilities[loop])) {
 				unsigned i = 1, pos = 0;
@@ -234,14 +323,23 @@ int solveSudoku2(int bb[81]) {
 		}
 
 		// Algoritme 3
+		// It can read if all possible places of a certain number from a block are in the same column or row
+		// If so, remove the number from other possibilities in the row/column
 		for (int loop = 0, block = 0, number = 0; loop < 81; loop++, block = loop / 9, number = loop % 9) {
 			int checkVar = 0;
-			if (!bit_read(algo3done[block], number) && possCounter(BLOCK_ITERATIONS, BLOCK_STARTS[block], number, possibilities) == 2) {
+			int checkVar2 = 0;
+			int alreadyDone = bit_read(algo3done[block], number);
+			int countInBlock = possCounter(BLOCK_ITERATIONS, BLOCK_STARTS[block], number, possibilities);
+
+			if (!alreadyDone && (countInBlock == 2 || countInBlock == 3)) {
+
+				// Cycle places in block
 				for (int i = 0; i < 9; i++) {
-					if (checkVar && bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
+
+					if (checkVar2 && bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
 						int tempPos = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
-						int sameColumn = (checkVar - 1) % 9 == tempPos % 9;
-						int sameRow = (checkVar - 1) / 9 == tempPos / 9;
+						int sameColumn = (checkVar2 - 1) % 9 == tempPos % 9;
+						int sameRow = (checkVar2 - 1) / 9 == tempPos / 9;
 						if (sameColumn || sameRow) {
 							bit_on(&algo3done[block], number);
 							doneSmth = 1;
@@ -262,10 +360,32 @@ int solveSudoku2(int bb[81]) {
 					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
 						checkVar = i + 1;
 					}
+					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
+						if (countInBlock == 3) {
+							if (checkVar) {
+								int tempPos = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
+								int sameColumn = (checkVar - 1) % 9 == tempPos % 9;
+								int sameRow = (checkVar - 1) / 9 == tempPos / 9;
+								if (sameColumn || sameRow) {
+									checkVar2 = i + 1;
+								}
+								else {
+									break;
+								}
+							}
+							else {
+								checkVar = i + 1;
+							}
+						}
+						else {
+							checkVar2 = i + 1;
+						}
+					}
 				}
 			}
 		}
 	}
-
+	// For backend visualization only, not part of final product
+	printBitBoard2(bb);
 	return bb;
 }

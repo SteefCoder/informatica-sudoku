@@ -1,25 +1,25 @@
-# Informatica project
+# Informatica project sprint 2
 Dit is het informatica project van Silvan van de Sande, Nathan Ooms en Stefan van der Duijs.
 We maken een sudoku solver in C, die we koppelen aan een website met een backend in python en frontend in javascript.
 
 
-## Belangrijkste stappen
-1) Het leren van C
-2) Het leren van version control met GitHub
-3) Het maken van een sudoku-solver
-4) Het maken van een (simple) website
-5) Het koppelen van de website aan de solver (met een API?)
+## Belangrijkste stappen van de tweede sprint
+1) Het maken van een (simple) website
+2) Het koppelen van de website aan de solver (met een API?)
+3) Het verbeteren van de sudoku-solver
 
 ## Minimum viable product
-We willen op z'n minst een solver in C die een makkelijke sudoku binnen 5 seconden kan oplossen.
-Makkelijk betekent dat minimaal 36 cijfers al gegeven zijn. (=MVP)
+We willen dat de gebruiker niet via de command line hoeft te werken, maar een mooie interface heeft.
+Die maken we als een website met html, css en javascript. (=MVP)
 
-Daarna zou het mooi zijn als we alle sudoku's kunnen oplossen (minimaal 17 cijfers) binnen een kortere tijd (1 seconde). (=should have)
-
-Als laatste willen we een mooie website (localhost) om sudoku's op in te kunnen voeren. (=could have)
-
+Daarbij willen we dat de gebruiker dan kan kiezen om de sudoku op te lossen met een druk op de knop (=must have)
+We willen dat de sudoku nu moeilijkere sudokus kan oplossen met nieuwe technieken (=could have)
 
 ## Taakverdeling
+Silvan doet de sudoku solver (in C).
+Stefan doet de website backend (in python) en javascript om de API te gebruiken.
+Nathan doet de website frontend (html en css).
+
 - Scrum master: Stefan
 - Product owner: Silvan
 
