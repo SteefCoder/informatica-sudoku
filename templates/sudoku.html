@@ -6,15 +6,18 @@
     <script src="{{ url_for('static', filename='base.js') }}"></script>
     <title>Sudoku</title>
 </head>
+<div class="topnav">
+    <a class="navbar" href="http://127.0.0.1:5000/#home">Home</a>
+    <a class= "active" href="sudoku">Sudoku Solver</a>
+    <a class= "navbar" href="#contact">Contact</a>
+    <a class= "navbar" href="#about">About</a>
+  </div>
 
 
 <body>
 
-<button class="button click1" onclick="solveGrid()">Solve</button>
-<button class="button click1" onclick="emptyGrid()">Empty</button>
-<br/>
-<input id="sudoku-code" type="text" size="81">
-<button onclick="setGridFromCode()">Set grid</button>
+
+
 <table class="center">
     {% for row in range(9) %}
         {% if row > 0 and row % 3 == 0 %}<tr></tr><tr></tr>{% endif %}
@@ -26,6 +29,11 @@
         {% endfor %}
         </tr>
     {% endfor %}
+
+    <input id="sudoku-code" type="text" size="81">
+<button onclick="setGridFromCode()">Set grid</button>
+<button class="button click1" onclick="solveGrid()">Solve</button>
+<button class="button click1" onclick="emptyGrid()">Empty</button>
 </table>
 
 </body>

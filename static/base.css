@@ -67,7 +67,7 @@ table.center {
 }
 
 .main {
-  background-color: #f1f1f1;
+  background-color: #fcd787;
   padding: 20px;
   float: left;
   width: 80%; 
@@ -85,3 +85,37 @@ table.center {
     width: 100%; 
   }
 }
+
+.topnav {
+  background-color: #012253d7;
+  overflow: hidden;
+  /*border*/
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 30px 20px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+body{
+  background-image: url("https://cdn.pixabay.com/photo/2016/06/02/02/33/triangles-1430105_640.png")
+}
+
+
