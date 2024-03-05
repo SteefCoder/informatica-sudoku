@@ -14,6 +14,10 @@ def index():
 def sudoku():
     return render_template("sudoku.html")
 
+@app.route('/about')
+def about():
+    pass
+
 @app.route('/solve-sudoku', methods=['GET'])
 def solve():
     grid = request.args["grid"]

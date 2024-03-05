@@ -1,35 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-
-</style>
-</head>
+{% extends 'base.html' %}
 
 
-<body>
-
-
-
-<div class="topnav">
-  <a class= "active" href="#home">Home</a>
-  <a class= "navbar" href="sudoku">Sudoku Solver</a>
-  <a class= "navbar" href="#contact">Contact</a>
-  <a class= "navbar" href="#about">About</a>
-</div>
-
+{% block content %}
 <div class="leftcontent">
   <h2>test</h2>
 </div>
-
- 
-
-
-
-
-
-
-</body>
-</html>
+{% endblock %}

@@ -47,7 +47,6 @@ function setGridFromCode() {
     }
 }
 
-
 async function solveGrid() {
     const grid = parseGrid();
     const response = await fetch("/solve-sudoku?grid=" + grid);
@@ -56,4 +55,25 @@ async function solveGrid() {
     //    setGrid(solution.grid);
     //}
     setGrid(solution.grid);
+}
+
+function handleArrows(event, cell) {
+    switch (event.key) {
+        case "ArrowLeft":
+            if (cell % 9 != 0) {
+                document.getElementById(cell - 1).focus();
+            } break;
+        case "ArrowUp":
+            if (cell > 8) {
+                document.getElementById(cell - 9).focus();
+            } break;
+        case "ArrowRight":
+            if (cell % 9 != 8) {
+                document.getElementById(cell + 1).focus();
+            } break;
+        case "ArrowDown":
+            if (cell < 72) {
+                document.getElementById(cell + 9).focus();
+            } break;
+    }
 }
