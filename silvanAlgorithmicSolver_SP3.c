@@ -1,3 +1,5 @@
+// gcc -shared -o solverlib.so SilvanAlgorithmicSolver_SP3.c -fPIC
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -386,6 +388,6 @@ int solveSudoku(int bb[81]) {
 		}
 	}
 	// For backend visualization only, not part of final product
-	// printBitBoard2(bb);
+	printBitBoard2(bb);
 	return bb;
 }

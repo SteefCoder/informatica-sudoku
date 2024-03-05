@@ -52,7 +52,8 @@ async function solveGrid() {
     const grid = parseGrid();
     const response = await fetch("/solve-sudoku?grid=" + grid);
     const solution = await response.json();
-    if (solution.solvable) {
-        setGrid(solution.grid);
-    }
+    // if (solution.solvable) {
+    //    setGrid(solution.grid);
+    //}
+    setGrid(solution.grid);
 }

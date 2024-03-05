@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from sudoku_solver import solve_sudoku
+from .sudoku_solver import solve_sudoku
 
 app = Flask(__name__)
 app.secret_key = rb'43290&O*#@&$#@*Ofk#$#@#*^TIF$@#&B*'

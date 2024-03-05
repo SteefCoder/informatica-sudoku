@@ -20,5 +20,6 @@ def solve_sudoku(grid: list[int]) -> tuple[bool, list[int]]:
     array = INT_81(*grid)
     _solve(array)
     solved_grid = [int(x) for x in array]
+    print(solved_grid)
     solvable = all(x != 0 for x in solved_grid)
     return solvable, solved_grid
