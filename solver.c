@@ -1,9 +1,10 @@
-// gcc -shared -o solverlib.so SilvanAlgorithmicSolver_SP3.c -fPIC
+// gcc -shared -o solverlib.so solver.c -fPIC
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 // Used to find all the other places from a block/row/column in the char81
 const int BLOCK_ITERATIONS[9] = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
@@ -97,81 +98,6 @@ const int findUpdatePlaces[81][20] = {
 	{ 72, 7, 60, 73, 16, 74, 25, 62, 75, 34, 69, 76, 43, 77, 52, 71, 78, 61, 70, 80 },
 	{ 72, 8, 60, 73, 17, 61, 74, 26, 75, 35, 69, 76, 44, 70, 77, 53, 78, 62, 79, 71 }
 };
-
-
-// This wont be neccesary when solveSudoku gets called from the python file, wont be part of final product
-// When called by Stefan's code it will use the inputted sudoku array
-int main() {
-
-	char string[81] = ".1...8...3.472169...6....1....9.253..421.378..358.6....9....1...213874.9...5...2.";
-
-	clock_t start = clock();
-
-	// Translate string81 to int81
-	int bb[81] = { 0 };
-	for (int loop = 0; loop < 81; loop++)
-	{
-		if (string[loop] == '.' || string[loop] == '0') {
-			bb[loop] = 0;
-		}
-		else {
-			bb[loop] = string[loop] - '0';
-		}
-	}
-	solveSudoku(bb);
-
-	clock_t end = clock();
-	printf("\n\nEnd with time of %dms\n\n", end - start);
-
-	printf("\"Dont Quote me\" - Ooms. N");
-}
-
-
-// Visualize Sudoku, not part of final product
-const void printBitBoard2(int* bitboard) {
-
-	printf("\n");
-	for (int loop = 0; loop < 81; loop++)
-	{
-		if (bitboard[loop] == 0) {
-			printf("   ");
-		}
-		else {
-			printf(" \033[4m%d\033[0m ", bitboard[loop]);
-		}
-
-		if (loop % 9 == 8)
-		{
-			printf("\n");
-		}
-		if (loop == 26 || loop == 53)
-		{
-			printf("____________________________\n\n");
-		}
-		if (loop % 9 == 2 || loop % 9 == 5)
-		{
-			printf("|");
-		}
-	}
-}
-
-
-// Bitarray print function
-void printBits(size_t const size, void const* const ptr)
-{
-	unsigned char* b = (unsigned char*)ptr;
-	unsigned char byte;
-	int i, j;
-
-	for (i = size - 1; i >= 0; i--) {
-		for (j = 7; j >= 0; j--) {
-			byte = (b[i] >> j) & 1;
-			printf("%u", byte);
-		}
-	}
-	puts("");
-}
-
 
 // Bitarray maniplulation functions
 const void bit_on(int* bit_number, unsigned index)
@@ -325,7 +251,7 @@ int solveSudoku(int bb[81]) {
 		}
 
 		// Algoritme 3
-		// It can read if all possible places of a certain number from a block are in the same column or row
+		// It can read if all number possibilities in a block are in the same column or row
 		// If so, remove the number from other possibilities in the row/column
 		for (int loop = 0, block = 0, number = 0; loop < 81; loop++, block = loop / 9, number = loop % 9) {
 			int checkVar = 0;
@@ -340,54 +266,49 @@ int solveSudoku(int bb[81]) {
 
 					if (checkVar2 && bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
 						int tempPos = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
-						int sameColumn = (checkVar2 - 1) % 9 == tempPos % 9;
-						int sameRow = (checkVar2 - 1) / 9 == tempPos / 9;
+						int sameColumn = checkVar % 9 == checkVar2 % 9 && checkVar2 % 9 == tempPos % 9;
+						int sameRow = checkVar / 9 == checkVar2 / 9 && checkVar2 / 9 == tempPos / 9;
+
 						if (sameColumn || sameRow) {
 							bit_on(&algo3done[block], number);
-							doneSmth = 1;
+
+							// Cycles through entire row/column to remove the possibilities in other blocks
 							for (int r = 0; r < 9; r++) {
 								if (sameRow) {
-									if (r / 3 != block % 3) {
+									if (r / 3 != block % 3 && bit_read_tf(possibilities[(tempPos / 9 * 9) + r], number)) {
+										doneSmth = 1;
 										bit_off(&possibilities[(tempPos / 9 * 9) + r], number);
 									}
-									continue;
 								}
-								if (r / 3 != block % 3) {
+								else if (r / 3 != block / 3 && bit_read_tf(possibilities[(r * 9) + tempPos % 9], number)) {
+									doneSmth = 1;
 									bit_off(&possibilities[(r * 9) + tempPos % 9], number);
 								}
 							}
 							break;
 						}
 					}
-					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
-						checkVar = i + 1;
-					}
-					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
+					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number) && !bb[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]]) {
 						if (countInBlock == 3) {
 							if (checkVar) {
 								int tempPos = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
-								int sameColumn = (checkVar - 1) % 9 == tempPos % 9;
-								int sameRow = (checkVar - 1) / 9 == tempPos / 9;
-								if (sameColumn || sameRow) {
-									checkVar2 = i + 1;
-								}
-								else {
+								int sameColumn = (checkVar - 0) % 9 == tempPos % 9;
+								int sameRow = (checkVar - 0) / 9 == tempPos / 9;
+								if (!(sameColumn || sameRow)) {
 									break;
 								}
+								checkVar2 = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
 							}
-							else {
-								checkVar = i + 1;
-							}
+							continue;
 						}
 						else {
-							checkVar2 = i + 1;
+							checkVar2 = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
 						}
+						checkVar = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
 					}
 				}
 			}
 		}
 	}
-	// For backend visualization only, not part of final product
-	printBitBoard2(bb);
 	return bb;
 }
