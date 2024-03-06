@@ -3,11 +3,13 @@ table, th, td {
   border: 1px solid black;
 }
 
-input[class='sudoku-cell']{
-  width: 75px;
-  height: 75px;
+.sudoku-cell {
+  width: 60px;
+  height: 60px;
   text-align: center;
-  font-size: 40px;
+  font-size: 30px;
+  transition-duration: 200ms;
+  outline: none;
 }
 
 .leftcontent{
@@ -21,6 +23,12 @@ input[class='sudoku-cell']{
   color: white;
   border-radius: 5px;
 }
+
+.highlighted {
+    background-color: red;
+    transition-duration: 200ms;
+}
+
 
 table.center {
   margin-left: auto; 
@@ -127,10 +135,6 @@ table.center {
   color: white;
 }
 
-body{
+body {
   background-image: url("https://cdn.pixabay.com/photo/2016/06/02/02/33/triangles-1430105_640.png")
 }
-
-
-
-

@@ -28,8 +28,14 @@ Sudoku
         </tr>
     {% endfor %}
 
-<input type="text" size="81" id="sudoku-code" value="000000000000000000000000000000000000000000000000000000000000000000000000000000000">
-<button onclick="setGridFromCode()">Set grid</button><br>
+<input
+    type="text"
+    size="81"
+    id="sudoku-code"
+    value="000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    oninput="onGridChange()"
+>
+<!--<button onclick="setGridFromCode()">Set grid</button><br>-->
 <button class="button click1" onclick="solveGrid()">Solve</button>
 <button class="button click1" onclick="emptyGrid()">Empty</button>
 </table>

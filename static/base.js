@@ -1,16 +1,3 @@
-function parseGrid() {
-    let grid = "";
-    for (let i = 0; i < 81; ++i) {
-        let el = document.getElementById(i);
-        if (el.value == "") {
-            grid += "0";
-        } else {
-            grid += el.value;
-        }
-    }
-    return grid;
-}
-
 function setValue(index, value) {
     if (value == "0" || value == "." || value == "") {
         document.getElementById(index).value = "";
@@ -20,17 +7,47 @@ function setValue(index, value) {
     }
     let v = document.getElementById("sudoku-code").value;
     document.getElementById("sudoku-code").value = v.substring(0, index) + value + v.substring(index + 1);
+
+    checkForDuplicates();
 }
 
-function setGrid(grid) {
-    for (let i = 0; i < 81; ++i) {
-        if (grid[i] == "0" || grid[i] == ".") {
-            setValue(i, "");
+function getValue(index) {
+    return document.getElementById("sudoku-code").value.charAt(index);
+}
+
+function checkForDuplicates() {
+    const boxes = [0, 3, 6, 27, 30, 33, 54, 57, 60];
+    const boxOffsets = [0, 1, 2, 9, 10, 11, 18, 19, 20];
+    for (let cell = 0; cell < 81; ++cell) {
+        if (getValue(cell) == 0) {
+            document.getElementById(cell).classList.remove("highlighted");
+            continue;
+        }
+        let row = Math.floor(cell / 9);
+        let col = cell % 9;
+        let box = 9 * Math.floor(row / 3) + Math.floor(col / 3);
+        box = boxes[box];
+        
+        let do_highlight = false;
+        for (let i = 0; i < 9; ++i) {
+            if (
+                (i != col && getValue(cell) == getValue(9 * row + i)) ||
+                (i != row && getValue(cell) == getValue(9 * i + col)) ||
+                (box + boxOffsets[i] != cell && getValue(cell) == getValue(box + boxOffsets[i]))
+             ) {
+                do_highlight = true;
+                break;
+            }
+        }
+
+        if (do_highlight) {
+            document.getElementById(cell).classList.add("highlighted");
         } else {
-            setValue(i, grid[i]);
+            document.getElementById(cell).classList.remove("highlighted");
         }
     }
 }
+
 
 function emptyGrid() {
     for (let i = 0; i < 81; ++i) {
@@ -50,10 +67,13 @@ function handleInput(event, cell) {
     }
 }
 
-function setGridFromCode() {
-    let code = document.getElementById("sudoku-code").value;
-    if (code.length === 81) {
-        setGrid(code);
+function onGridChange() {
+    let grid = document.getElementById("sudoku-code").value;
+    console.log(grid);
+    if (grid.length === 81) {
+        for (let i = 0; i < 81; ++i) {
+            setValue(i, grid[i]);
+        }
     }
 }
 
@@ -61,7 +81,9 @@ async function solveGrid() {
     const grid = parseGrid();
     const response = await fetch("/solve-sudoku?grid=" + grid);
     const solution = await response.json();
-    setGrid(solution.grid);
+    for (let i = 0; i < 81; ++i) {
+        setValue(i, solution.grid[i]);
+    }
 }
 
 function handleArrows(event, cell) {
