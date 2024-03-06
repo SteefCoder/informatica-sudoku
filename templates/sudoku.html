@@ -20,8 +20,7 @@ Sudoku
                 id="{{ index }}"
                 class="sudoku-cell"
                 type="text"
-                onkeypress="handleInput(event, {{ index }})"
-                onkeydown="handleArrows(event, {{ index }})"
+                onkeydown="handleInput(event, {{ index }}); handleArrows(event, {{ index }})"
             ></td>
             {% endwith %}
             {% if col < 8 and col % 3 == 2 %}<td style="border: none"></td>{% endif %}
@@ -29,7 +28,8 @@ Sudoku
         </tr>
     {% endfor %}
 
-<!--<button onclick="setGridFromCode()">Set grid</button>-->
+<input type="text" size="81" id="sudoku-code" value="000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+<button onclick="setGridFromCode()">Set grid</button><br>
 <button class="button click1" onclick="solveGrid()">Solve</button>
 <button class="button click1" onclick="emptyGrid()">Empty</button>
 </table>
