@@ -59,7 +59,7 @@ function handleInput(event, cell) {
     event.preventDefault();
 
     let key = event.keyCode;
-    if (96 <= key <= 105) {
+    if (96 <= key && key <= 105) {
         // numpad key values
         key -= 48;
     }
