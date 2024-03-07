@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from .sudoku_solver import solve_sudoku
+from .sudoku_solver import silvan_solve_sudoku, stefan_solve_sudoku
 
 app = Flask(__name__)
 app.secret_key = rb'43290&O*#@&$#@*Ofk#$#@#*^TIF$@#&B*'
@@ -29,7 +29,7 @@ def solve():
         return {"grid": "", "solvable": False} 
     
     int_grid = [int(x) for x in grid]
-    solvable, solution = solve_sudoku(int_grid)
+    solvable, solution = stefan_solve_sudoku(int_grid)
     return {"grid": solution, "solvable": solvable}
 
 

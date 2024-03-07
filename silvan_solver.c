@@ -1,4 +1,4 @@
-// gcc -shared -o solverlib.so solver.c -fPIC
+// gcc -shared -o silvan_solver.so silvan_solver.c -fPIC
 
 #include <stdio.h>
 #include <stdlib.h>

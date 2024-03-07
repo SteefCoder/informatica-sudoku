@@ -59,6 +59,10 @@ function handleInput(event, cell) {
     event.preventDefault();
 
     let key = event.keyCode;
+    if (96 <= key <= 105) {
+        // numpad key values
+        key -= 48;
+    }
     key = String.fromCharCode(key);
     if (event.keyCode == 8 || event.keyCode == 46) {
         setValue(cell, "0");
@@ -78,7 +82,7 @@ function onGridChange() {
 }
 
 async function solveGrid() {
-    const grid = parseGrid();
+    const grid = document.getElementById("sudoku-code").value;
     const response = await fetch("/solve-sudoku?grid=" + grid);
     const solution = await response.json();
     for (let i = 0; i < 81; ++i) {
