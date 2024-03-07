@@ -25,7 +25,7 @@ function checkForDuplicates() {
         }
         let row = Math.floor(cell / 9);
         let col = cell % 9;
-        let box = 9 * Math.floor(row / 3) + Math.floor(col / 3);
+        let box = 3 * Math.floor(row / 3) + Math.floor(col / 3);
         box = boxes[box];
         
         let do_highlight = false;
