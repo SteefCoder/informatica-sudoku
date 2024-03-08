@@ -1,7 +1,65 @@
-h1 {text-align: center;}
+/*structure*/
+body {
+  background-image: url("https://cdn.pixabay.com/photo/2016/06/02/02/33/triangles-1430105_640.png")
+}
+
+@media screen and (max-width: 800px) {
+  .left, .main, .right {
+    width: 100%; 
+  }
+}
+
+.body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 table, th, td {
   border: 1px solid black;
 }
+
+.page{
+  background-color: #34c1ecd7;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 50px;
+  text-align: center;
+  min-height: 600px;
+  opacity: 0.95;
+  color: white;
+  border-radius: 5px;
+  padding-top: 20px;
+}
+
+.content{
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alignLeft{
+  position: absolute;
+  right: 0px;
+  padding: 20px;
+}
+
+/* text */
+
+h1 {
+  text-align: center;
+}
+
+.paragraph{ 
+  font-size: 1.3em;
+  padding: 1em;
+} 
+
+.buttonText{
+  text-decoration: none;
+  color: black;
+  font-size: 1.3em;
+}
+
+/* sudoku */
 
 .sudoku-cell {
   width: 60px;
@@ -12,31 +70,17 @@ table, th, td {
   outline: none;
 }
 
-.leftcontent{
-  background-color: #34c1ecd7;
-  float: left;
-  width: 25%;
-  padding: 15px;
-  margin-top: 50px;
-  text-align: center;
-  opacity: 0.95;
-  color: white;
-  border-radius: 5px;
-}
-
 .highlighted {
     background-color: red;
     transition-duration: 200ms;
 }
-
 
 table.center {
   margin-left: auto; 
   margin-right: auto;
 }
 
-
-.button {
+.buttonGreen {
   background-color: #04AA6D; /* Green */
   border: none;
   color: white;
@@ -50,8 +94,8 @@ table.center {
   cursor: pointer;
 }
 
-.button {
-  background-color: #04AA6D; /* Green */
+.buttonGrey {
+  background-color: #4E4E4E; /* Grey */
   border: none;
   color: #f2f2f2;
   padding: 12px 18px;
@@ -75,9 +119,21 @@ table.center {
   color: white;
 }
 
+.click2 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4e4e4e;
+}
+
+.click2:hover {
+  background-color: #4e4e4e;
+  color: white;
+}
 * {
   box-sizing: border-box;
 }
+
+/* navigation */
 
 .top {
   background-color: #21ecf3;
@@ -86,25 +142,6 @@ table.center {
   width: 100%; 
 }
 
-.main {
-  background-color: #fcd787;
-  padding: 20px;
-  float: left;
-  width: 80%; 
-}
-
-.right {
-  background-color: #04AA6D;
-  padding: 20px;
-  float: left;
-  width: 20%; 
-}
-
-@media screen and (max-width: 800px) {
-  .left, .main, .right {
-    width: 100%; 
-  }
-}
 
 .topnav {
   background-color: #34c1ecd7;
@@ -135,6 +172,57 @@ table.center {
   color: white;
 }
 
-body {
-  background-image: url("https://cdn.pixabay.com/photo/2016/06/02/02/33/triangles-1430105_640.png")
+
+/* Popup container */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
 }
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 1%;
+  left: 50%;
+  margin-left: -200px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
