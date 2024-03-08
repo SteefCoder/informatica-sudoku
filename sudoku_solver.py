@@ -4,12 +4,18 @@ The function solve_sudoku defined in here just calls the same-named c function.
 """
 
 import ctypes
+import os
+import pathlib
+
+
+path = pathlib.Path.cwd()
+os.add_dll_directory(path)
 
 INT_81 = ctypes.c_int * 81
 INT8_81 = ctypes.c_int8 * 81
 
 # load the compiled c file
-_stefan_solver = ctypes.CDLL("./stefan_solver.so", winmode=0)
+_stefan_solver = ctypes.CDLL("./stefan_solver.so", winmode=1)
 _silvan_solver = ctypes.CDLL("./silvan_solver.so")
 
 # set up the c function
