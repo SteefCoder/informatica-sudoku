@@ -59,6 +59,12 @@ h1 {
   font-size: 1.3em;
 }
 
+/* images */
+
+.image{
+  width: 300px;
+}
+
 /* sudoku */
 
 .sudoku-cell {
@@ -183,17 +189,17 @@ table.center {
 /* The actual popup (appears on top) */
 .popup .popuptext {
   visibility: hidden;
-  width: 160px;
-  background-color: #555;
-  color: #fff;
+  width: 360px;
+  background-color: white;
+  color: black;
   text-align: center;
   border-radius: 6px;
   padding: 8px 0;
   position: absolute;
   z-index: 1;
-  bottom: 1%;
+  bottom: -800%;
   left: 50%;
-  margin-left: -200px;
+  margin-left: -450px;
 }
 
 /* Popup arrow */
