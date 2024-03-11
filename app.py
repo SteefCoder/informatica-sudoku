@@ -29,7 +29,18 @@ def solve():
         return {"grid": "", "solvable": False} 
     
     int_grid = [int(x) for x in grid]
-    solvable, solution = stefan_solve_sudoku(int_grid)
+    solvable, solution = silvan_solve_sudoku(int_grid)
+    if solution == int_grid:
+        print("Silvan solver could not find any numbers.")
+        print("Solving sudoku with backtracking...")
+        solvable, solution = stefan_solve_sudoku(int_grid)
+    elif not solvable:
+        print("Silvan solver solved some numbers, but not all.")
+        print("Finishing sudoku with backtracking...")
+        solvable, solution = stefan_solve_sudoku(solution)
+    else:
+        print("Silvan solver completely solved the sudoku!")
+        
     return {"grid": solution, "solvable": solvable}
 
 
