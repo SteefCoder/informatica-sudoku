@@ -29,8 +29,16 @@ def solve():
         return {"grid": "", "solvable": False} 
     
     int_grid = [int(x) for x in grid]
-    solvable, solution = stefan_solve_sudoku(int_grid)
-    return {"grid": solution, "solvable": solvable}
+
+    solved, solution = silvan_solve_sudoku(int_grid)
+    if not solved:
+        print("Intuitive solver could not finish the sudoku, leaving it to backtracking.")
+        # assuming any changes made by silvan_solver are correct
+        solved, solution = stefan_solve_sudoku(solution)
+    else:
+        print("Intuitive solver completely solved the sudoku!")
+
+    return {"grid": solution, "solvable": solved}
 
 
 if __name__ == '__main__':
