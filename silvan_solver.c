@@ -6,15 +6,27 @@
 #include <time.h>
 #include <stdbool.h>
 
-// Used to find all the other places from a block/row/column in the char81
+/* This program is built on 2 important variables, defined later
+The int81 named bb (meaning bitboard) keeps track of all the numbers that are filled in
+The int81 named possibilities keeps track of all the possible numbers for every cell in de sudoku
+For every cell it keeps track by reading and writing individual bits where the index of the bit corilates to the number
+ - Example: cell 7 has value 40 so 01100100 which means that the 2, 3 and 6 are available in that cell
+ - In practice a int is indexed in reverse, so it would look like 00100110
+Both variable correspond to a sudoku indexed from top left, with index 0, to bottom right, with index 80, going from left to right
+*/
+
+
+/* Used to find all the other places from a block / row / column in a int81
+Finds the next position based on the index. Works for all rows/blocks/columns */
 const int BLOCK_ITERATIONS[9] = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
 const int ROW_ITERATIONS[9] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 const int COLUMN_ITERATIONS[9] = { 0, 9, 18, 27, 36, 45, 54, 63, 72 };
 
-// All the starting positions of the blocks in the char81
+// All the starting positions of the blocks in a int81
 const int BLOCK_STARTS[9] = { 0, 3, 6, 27, 30, 33, 54, 57, 60 };
 
-// Finds all the other places a cel 'sees'. So block/row/column
+/* Finds all the other places a cel 'sees'.So block / row / column
+You index the list based on what cel you're working with. It returns all the other indexes of the cels it sees */
 const int findUpdatePlaces[81][20] = {
 	{ 1, 9, 2, 18, 3, 27, 4, 36, 10, 5, 45, 11, 6, 54, 7, 63, 19, 8, 72, 20 },
 	{ 0, 10, 2, 19, 3, 28, 9, 4, 37, 5, 46, 11, 6, 55, 18, 7, 64, 8, 73, 20 },
@@ -100,32 +112,32 @@ const int findUpdatePlaces[81][20] = {
 };
 
 // Bitarray maniplulation functions
+
+// Turns a bit on based on the index
 const void bit_on(int* bit_number, unsigned index)
 {
 	*bit_number |= (1 << index);
 }
 
+// Turns a bit off based on the index
 const void bit_off(int* bit_number, unsigned index)
 {
 	*bit_number &= ~(1 << index);
 }
 
-const int bit_read(int bit_number, unsigned index)
-{
-	return (1 << index) & bit_number;
-}
-
+// Returns if a bit is on or off based on the index
 const int bit_read_tf(int bit_number, unsigned index)
 {
 	return ((1 << index) & bit_number) >> index;
 }
 
+// Flips the value of a bit based on the index
 const void bit_flip(int* bit_number, unsigned index)
 {
 	*bit_number ^= (1 << index);
 }
 
-// Returns amount of bits that are 1 in integer
+// Returns amount of bits that are in in an integer
 const int bit_count(int bit_number)
 {
 	int count = 0;
@@ -136,14 +148,14 @@ const int bit_count(int bit_number)
 	return count;
 }
 
-// Return True or False of certain bit
+// Return if only 1 bit is on
 int onlyOneBitTF(unsigned n)
 {
 	return n && (!(n & (n - 1)));
 }
 
 
-// Possibilities checker
+// Returns amount of numbers possibile in a cel
 const int possCounter(int loopList[9], int start, int number, int possibilitie[81])
 {
 	int count = 0;
@@ -168,24 +180,26 @@ const void algoritme1(int loop, int RCB, int n, int possibilities[81], int bb[81
 	int location;
 	for (int i = 0; i < 9; i++) {
 
-		// RCB = 9 is Rows RCB = 1 is columns RCB = 0 is Blocks
-		// Replacement of 3 way if or switch
+		/* RCB = 9 is Rows RCB = 1 is columns RCB = 0 is Blocks
+		Replacement of 3 way if or switch
+		For every iteration of i, returns index of int81 */
 		location = RCB ? RCB * loop + (9 / RCB) * i : BLOCK_STARTS[loop] + BLOCK_ITERATIONS[i];
 
-		if (bit_read(possibilities[location], n)) {
+		// We know only one place has said number as a possibilitie. So when it finds it, it sets it
+		if (bit_read_tf(possibilities[location], n)) {
+			// Update the bb
 			bb[location] = n + 1;
+			// Update the cel, that it has been filled in
 			possibilities[location] = 0;
+			// Update all the cels this change 'sees'
 			update(location, n, possibilities);
-			break;
+			return;
 		}
 	}
 }
 
-
+// Main function, called by Python code
 int solveSudoku(int bb[81]) {
-
-	// For backend visualization only, not part of final product
-	// printBitBoard2(bb);
 
 	// Setup main paramaters to keep track of the board
 	int possibilities[81] = { 0 };
@@ -196,8 +210,13 @@ int solveSudoku(int bb[81]) {
 	// Determening all the possible numbers per cell
 	for (int loop = 0; loop < 81; loop++)
 	{
+		// If the cel isnt already in use, the program needs to know what numbers can be used
 		if (!bb[loop]) {
+
+			// 511 turns the first 9 bits, which corrilate to the 9 possible numbers, on
 			possibilities[loop] = 511;
+
+			// Loops through all the places a cel sees. If a number is filled in, it means it cant be placed in this cel
 			for (int c = 0; c < 20; c++)
 			{
 				if (bb[findUpdatePlaces[loop][c]]) {
@@ -206,27 +225,37 @@ int solveSudoku(int bb[81]) {
 			}
 		}
 	}
+
+	// This variable keeps track of any changes made during the solving procces
+	int changed_smth = 1;
+
 	// Main solving loop, keeps looping untill no changes can be made
-	int doneSmth = 1, count = 0;
+	while (changed_smth) {
 
-	while (doneSmth) {
-		doneSmth = 0;
-		count++;
-
+		// Reset the tracker
+		changed_smth = 0;
+		
 		// Algoritme 1
-		// Finds any number that only has 1 place in a ROW or COLUMN or BLOCK
+		/* Finds any number that only has 1 place in a ROW or COLUMN or BLOCK
+		Loops through every column/row/block, as loop, and every number, as n */
 		for (int i = 0, loop = 0, n = 0; i < 81; i++, loop = i / 9, n = i % 9) {
+
+			/* It checks per row / column / block if a certain number only has 1 possible place, if so placing it
+			possCounter only checks integers and finds the places in the bb[81] using precalculated intervals
+			The function knows which one by using the number. Uing some math this could be used to simplify a 3 way if statement*/
 			if (possCounter(ROW_ITERATIONS, loop * 9, n, possibilities) == 1) {
+
+				// This function finds what place that is and places it. Function used because its almost the same code 3X
 				algoritme1(loop, 9, n, possibilities, bb);
-				doneSmth = 1;
+				changed_smth = 1;
 			}
 			if (possCounter(COLUMN_ITERATIONS, loop, n, possibilities) == 1) {
 				algoritme1(loop, 1, n, possibilities, bb);
-				doneSmth = 1;
+				changed_smth = 1;
 			}
 			if (possCounter(BLOCK_ITERATIONS, BLOCK_STARTS[loop], n, possibilities) == 1) {
 				algoritme1(loop, 0, n, possibilities, bb);
-				doneSmth = 1;
+				changed_smth = 1;
 			}
 		}
 
@@ -236,71 +265,106 @@ int solveSudoku(int bb[81]) {
 			if (onlyOneBitTF(possibilities[loop])) {
 				unsigned i = 1, pos = 0;
 				// Iterate through bits of n till we find a set bit 
-				// i&n will be non-zero only when 'i' and 'n' have a set bit at same position 
 				while (!(i & possibilities[loop])) {
-					// Unset current bit and set the next bit in 'i' 
+					// Set selector to next one, and keep track of the position
 					i = i << 1;
-					// increment position 
 					++pos;
 				}
+				// Update the bb
 				bb[loop] = pos + 1;
+				// Update the cel, that it has been filled in
 				possibilities[loop] = 0;
+				// Update all the cels this change 'sees'
 				update(loop, pos, possibilities);
-				doneSmth = 1;
+
+				changed_smth = 1;
 			}
 		}
 
 		// Algoritme 3
-		// It can read if all number possibilities in a block are in the same column or row
-		// If so, remove the number from other possibilities in the row/column
+		/* It can read if all number possibilities in a block are in the same column or row
+		If so, remove the number from other possibilities in the row/column */
 		for (int loop = 0, block = 0, number = 0; loop < 81; loop++, block = loop / 9, number = loop % 9) {
+
+			/* There can be either 2 or 3 numbers in the same row or column.
+			To check if they are in the same row or column it needs to save 1, in case of 2 places, 
+			or 2, in case of 3 places, other places the number can be, to compare to the last place it can be */
 			int checkVar = 0;
 			int checkVar2 = 0;
-			int alreadyDone = bit_read(algo3done[block], number);
+
+			// Counts how many times a number can be places in a column or block
 			int countInBlock = possCounter(BLOCK_ITERATIONS, BLOCK_STARTS[block], number, possibilities);
 
-			if (!alreadyDone && (countInBlock == 2 || countInBlock == 3)) {
+			/* First it checks if this number hasnt already been covered, in the block, by algorithm 3 using algo3done.
+			Then it checks if it has 2 or 3 possible places, which makes this algorithm work */
+			if (!bit_read_tf(algo3done[block], number) && (countInBlock == 2 || countInBlock == 3)) {
 
 				// Cycle places in block
 				for (int i = 0; i < 9; i++) {
 
+					// The checkVar2 is filled in once the first, in case of 2 place, or the second, in case of 3 places, place has been found
+					// Then it checks if the current index is the final place
 					if (checkVar2 && bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
+
+						// Finds the pos according to the in81 index
 						int tempPos = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
+
+						/* Finds if the all 2 or 3 numbers are in the same column or row
+						If there are only 2 options, checkVar will be the same as checkVar2 (second part of algorithm 3) */
 						int sameColumn = checkVar % 9 == checkVar2 % 9 && checkVar2 % 9 == tempPos % 9;
 						int sameRow = checkVar / 9 == checkVar2 / 9 && checkVar2 / 9 == tempPos / 9;
 
 						if (sameColumn || sameRow) {
+							// If they allign, save the fact this number has been checked, in the block, using algorithm 3
 							bit_on(&algo3done[block], number);
+
+							changed_smth = 1;
 
 							// Cycles through entire row/column to remove the possibilities in other blocks
 							for (int r = 0; r < 9; r++) {
+								// The math in the [] of possibilites turns the r index to the index of the int81
 								if (sameRow) {
-									if (r / 3 != block % 3 && bit_read_tf(possibilities[(tempPos / 9 * 9) + r], number)) {
-										doneSmth = 1;
+									// Make sure the cel it turns off isnt in the same block as where it found the 2 or 3 number possibilities that allign
+									if (r / 3 != block % 3) {
 										bit_off(&possibilities[(tempPos / 9 * 9) + r], number);
 									}
 								}
-								else if (r / 3 != block / 3 && bit_read_tf(possibilities[(r * 9) + tempPos % 9], number)) {
-									doneSmth = 1;
+								// Else it is same column, so no need to check
+								// Make sure the cel it turns off isnt in the same block as where it found the 2 or 3 number possibilities that allign
+								else if (r / 3 != block / 3) {
 									bit_off(&possibilities[(r * 9) + tempPos % 9], number);
 								}
 							}
 							break;
 						}
 					}
-					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number) && !bb[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]]) {
+					// This finds if a certain place in a block has one of the numbers that have 2 or 3 possibilities
+					if (bit_read_tf(possibilities[BLOCK_STARTS[block] + BLOCK_ITERATIONS[i]], number)) {
+
+						// In case there are 3 places in the block, the extra step of the 3rd place must be done
 						if (countInBlock == 3) {
+
+							// In case the first place has already been found it checks if the first 2 places allign
 							if (checkVar) {
+
+								// Same proces as line 335
 								int tempPos = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
 								int sameColumn = (checkVar - 0) % 9 == tempPos % 9;
 								int sameRow = (checkVar - 0) / 9 == tempPos / 9;
+
+								// If they dont align, the 3rd one also cant and it breaks the loop
 								if (!(sameColumn || sameRow)) {
 									break;
 								}
+
+								// Due to the break, this functions as a 'else'
 								checkVar2 = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
+
+								// If the firt place wasnt found yet, it doesnt continue and it sets checkVar on line 397
+								continue;
 							}
-							continue;
 						}
+						// If there are only 2 places it instantly sets checkVar2 and checkVar on line 397. See line 339
 						else {
 							checkVar2 = BLOCK_STARTS[block] + BLOCK_ITERATIONS[i];
 						}
@@ -310,5 +374,6 @@ int solveSudoku(int bb[81]) {
 			}
 		}
 	}
+	// Returns as much as this code could solve
 	return bb;
 }
