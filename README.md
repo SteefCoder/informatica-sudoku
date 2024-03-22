@@ -3,6 +3,10 @@ Dit is het informatica project van Silvan van de Sande, Nathan Ooms en Stefan va
 We maken een sudoku solver in C, die we koppelen aan een website met een backend in python en frontend in javascript.
 
 
+## Instructies
+- Om de website te starten, run `>python app.py` vanuit de terminal in de base folder. 
+- Als er niets gebeurt als je op solve klikt, check je terminal, want dan kan het zijn dat er iets fout gaat in de `sudoku_solver.py` file die de c-code importeerd. Dat heeft met windows te maken. In `sudoku_solver.py` staan instructies.
+
 ## Belangrijkste stappen
 1) Het leren van C
 2) Het leren van version control met GitHub

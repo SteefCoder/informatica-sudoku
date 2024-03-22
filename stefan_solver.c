@@ -66,6 +66,9 @@ uint16_t find_neighbours(const sudoku_t *sudoku, square_t square) {
 
 
 int8_t build_from_grid(sudoku_t *sudoku, const int8_t grid[81]) {
+    /* Build a sudoku struct from a simple grid.
+     * Returns the number of zeros (aka empty cells) in the sudoku.
+    */
     int8_t zeros = 0;
 
     for (int i = 0; i < 81; ++i) {
@@ -86,6 +89,12 @@ int8_t fill_basic(
     int8_t current_basic_solved,
     int8_t *zero_index
 ) {
+    /*
+     * Tries to fill the sudoku using a very basic (non-recursive) algorithm.
+     * Adds the solved numbers to the basic_solved array from the current_basic_solved index on.
+     * Sets the zero index to the next available zero in the sudoku.
+     * Returns the number of filled numbers or -1 if the sudoku is not solvable.
+    */
     int8_t filled = 0;
     int8_t max_neigbours = -1;
 
@@ -98,21 +107,23 @@ int8_t fill_basic(
 		// count the number of different neighbours (aka the number of set bits)
 		// ignore the zero bit, so shift by one before counting
 		int neighbour_count = __builtin_popcount(neighbours >> 1);
-        // printf("%u\n", neighbours);
 
 		if (neighbour_count == 9) {
 			// the square has neighbours of all variations
 			// and therefore has no options
 			// all previously set numbers must now be reset
+            // the sudoku cannot be solved
 			for (int i = 0; i < filled; i++) {
 				reset_square(sudoku, basic_solved[current_basic_solved + i]);
 			}
-			return -1;
+			return -1;  // status code for no solution
 
 		} else if (neighbour_count == 8) {
 			// 8 out of 9 numbers are not possible, so 
 			// there is only one possibility
 			for (int n = 1; n <= 9; n++) {
+
+                // the neighbours bitmap at n is not set
 				if ((neighbours & (1 << n)) == 0) {
 					set_square(sudoku, square, n);
 					basic_solved[current_basic_solved + filled] = square;
@@ -120,7 +131,11 @@ int8_t fill_basic(
 					break;
 				}
 			}
+
 		} else if (neighbour_count > max_neigbours) {
+            // keep track of the cell with the maximum number of neighbours
+            // to give to the zero_index variable.
+            // choose the cell with the
             max_neigbours = neighbour_count;
             *zero_index = i;
         }
@@ -135,7 +150,9 @@ bool _solve_sudoku(
     int8_t current_basic_solved,
     int8_t zero_count
 ) {
-
+    /* Solve a sudoku recursively
+     *
+    */
     if (zero_count == 0) {
         return true;
     }
@@ -143,7 +160,7 @@ bool _solve_sudoku(
     int8_t square_index = 0;
 
 	// try to fill as many zeros as possible with a more basic algorithm
-	// store these values, so they can be reset after
+	// store these values, so they can be reset if the currect assumptions are incorrect
     int8_t filled = fill_basic(sudoku, basic_solved, current_basic_solved, &square_index);
 
     // the sudoku might be found to be unsolvable
@@ -156,6 +173,9 @@ bool _solve_sudoku(
 
     // the current zero might have been filled by the alg
     // in that case, go on to the next one
+    // NOTE -- shouldn't affect the perfomance,
+    // since the fill_basic algorithm only chooses empty squares.
+    // But it speeds up the algorithm so whatever.
     if (sudoku->grid[square.cell] != 0) {
         return _solve_sudoku(
             sudoku,

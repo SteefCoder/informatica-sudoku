@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request
 
-from sudoku_solver import silvan_solve_sudoku, stefan_solve_sudoku
+try:
+    from sudoku_solver import silvan_solve_sudoku, stefan_solve_sudoku
+except ImportError:
+    from .sudoku_solver import silvan_solve_sudoku, stefan_solve_sudoku
 
 app = Flask(__name__)
 app.secret_key = rb'43290&O*#@&$#@*Ofk#$#@#*^TIF$@#&B*'
