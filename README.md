@@ -4,7 +4,8 @@ We maken een sudoku solver in C, die we koppelen aan een website met een backend
 
 
 ## Instructies
-- Om de website te starten, run `> python app.py` of `> flask run` vanuit de terminal in de base folder. 
+- Om de website te starten, run `> python app.py` of `> flask run` vanuit de terminal in de base folder.
+- Ga dan naar http://127.0.0.1:5000 en je bent er!
 - In de C-files staat bovenaan hoe ze gecompiled zijn (je hoeft dat niet zelf te doen, maar voor de zekerheid)
 
 ## Belangrijkste stappen
